@@ -44,6 +44,7 @@ const moviesController = {
     },
     'recomended': (req, res) => {
         db.Movie.findAll({
+            include: ['genre'],
             where: {
                 rating: {[db.Sequelize.Op.gte] : 8}
             },
@@ -59,7 +60,7 @@ const moviesController = {
     //Aqui dispongo las rutas para trabajar con el CRUD
    /* add: function (req, res) {
          return res.render('moviesAdd') */
-    add: async (req, res) => {
+    /*add: async (req, res) => {
             try {
                 const generos = await db.Genre.finAll()
                 return res.render('moviesAdd', {allGenres: generos}) 
@@ -67,7 +68,18 @@ const moviesController = {
             } catch (error) {
                 console.log(error)
                 
-            }
+            }*/
+
+    add: function (req, res) {
+            let promGenres = Genres.findAll();
+            let promActors = Actors.findAll();
+                
+            Promise
+            .all([promGenres, promActors])
+            .then(([allGenres, allActors]) => {
+                return res.render(path.resolve(__dirname, '..', 'views',  'moviesAdd'), {allGenres,allActors})})
+            .catch(error => res.send(error))
+           
     },
     /*create: async (req, res) => {
         try {
@@ -80,6 +92,22 @@ const moviesController = {
             console.log(error)
             
         }*/
+       /* create: function (req,res) {
+            Movies
+            .create(
+                {
+                    title: req.body.title,
+                    rating: req.body.rating,
+                    awards: req.body.awards,
+                    release_date: req.body.release_date,
+                    length: req.body.length,
+                    genre_id: req.body.genre_id
+                }
+            )
+            .then(()=> {
+                return res.redirect('/movies')})            
+            .catch(error => res.send(error))*/
+        
     create: async (req, res) => {
             try {
                 console.log(req.body)
@@ -138,9 +166,22 @@ const moviesController = {
         catch(error){
             console.log(error)
              }
-            
-        
-    },
+/*
+ edit: function(req,res) {
+        let movieId = req.params.id;
+        let promMovies = Movies.findByPk(movieId,{include: ['genre','actors']});
+        let promGenres = Genres.findAll();
+        let promActors = Actors.findAll();
+        Promise
+        .all([promMovies, promGenres, promActors])
+        .then(([Movie, allGenres, allActors]) => {
+            Movie.release_date = moment(Movie.release_date).format('L');
+            return res.render(path.resolve(__dirname, '..', 'views',  'moviesEdit'), {Movie,allGenres,allActors})})
+        .catch(error => res.send(error))
+
+
+*/
+ },
     update: async (req,res) => {
         try {
             const peliculaEditada = await db.Movie.update({
@@ -153,6 +194,27 @@ const moviesController = {
           } catch (error) {
               console.log(error)
         }
+
+/*
+update: function (req,res) {
+        let movieId = req.params.id;
+        Movies
+        .update(
+            {
+                title: req.body.title,
+                rating: req.body.rating,
+                awards: req.body.awards,
+                release_date: req.body.release_date,
+                length: req.body.length,
+                genre_id: req.body.genre_id
+            },
+            {
+                where: {id: movieId}
+            })
+        .then(()=> {
+            return res.redirect('/movies')})            
+        .catch(error => res.send(error))
+*/
         
     },
     delete: async(req, res) => {
@@ -176,6 +238,17 @@ const moviesController = {
        } catch (error) {
         console.log(error)
        }
+
+    /*
+    destroy: function (req,res) {
+        let movieId = req.params.id;
+        Movies
+        .destroy({where: {id: movieId}, force: true}) // force: true es para asegurar que se ejecute la acción
+        .then(()=>{
+            return res.redirect('/movies')})
+        .catch(error => res.send(error)) 
+    }
+    */
     },
     restore: async (req, res) => {
         try {
