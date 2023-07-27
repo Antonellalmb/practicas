@@ -16,4 +16,5 @@ router.post('/movies/update/:id', moviesController.update);
 router.get('/movies/delete/:id', moviesController.delete);
 router.post('/movies/delete/:id', moviesController.destroy);
 router.get('/movies/restore/:id', moviesController.restore);
+
 module.exports = router;
