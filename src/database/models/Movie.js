@@ -1,44 +1,50 @@
+const config = require("../config/config")
 module.exports = (sequelize, dataTypes) => {
     let alias = 'Movie';
     let cols = {
-        id: {
-            type: dataTypes.INTEGER,
+        id :{
+            type: DataType.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true
         },
-        title: {
-            type: dataTypes.STRING
+        title : {
+            type: DataType.STRING(500)
+           // alowNull: false
         },
-        rating: {
-            type: dataTypes.INTEGER
-        },
-        length: {
-            type: dataTypes.INTEGER
+        rating : {
+            type: DataType.DECIMAL(3.1)
         },
         awards: {
-            type: dataTypes.INTEGER
+            type: DataType.INTEGER.UNSIGNED
         },
-        release_date: {
-            type: dataTypes.DATE
+        release_date : {
+            type: DataType.DATE
         },
-        created_at:{
-            type: dataTypes.DATE
+        length: {
+            type: DataType.INTEGER.UNSIGNED
         },
-        updated_at:{
-            type: dataTypes.DATE
+        genre_id:{
+            type: DataType.INTEGER.UNSIGNED
         },
-        deleted_at:{
-            type: dataTypes.DATE
+        created_at: {
+            type: DataType.DATE
+        },
+        update_at:{
+            type: DataType.DATE
         }
 
     };
+    const config = {
+        tableName: 'movies', 
+        timestamps: false
+    /*
     let config = {
         tableName: 'movies',
         timestamps: true,
         paranoid: true,
         createdAt:'created_at' ,
         updatedAt: 'updated_at',
-        deletedAt: 'deleted_at'
+        deletedAt: 'deleted_at'*/
     };
     const Movie = sequelize.define(alias, cols, config)
 
